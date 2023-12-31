@@ -35,8 +35,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;//移动输入操作
 	
-	IHighLightIterface* LastActor;//上一帧命中的
-	IHighLightIterface* ThisActor;//当前帧命中的
+	IHighLightIterface* LastActor;//上一帧
+	IHighLightIterface* ThisActor;//当前帧
 
 	void Move(const FInputActionValue& InputActionValue);//移动输入操作回调函数
 

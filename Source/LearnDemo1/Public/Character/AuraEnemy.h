@@ -1,0 +1,26 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Character/AuraCharacterBase.h"
+#include"Iterface\HighLightIterface.h"
+#include "AuraEnemy.generated.h"
+
+/**
+ * 敌方NPC人形
+ */
+UCLASS()
+class LEARNDEMO1_API AAuraEnemy : public AAuraCharacterBase, public IHighLightIterface
+{
+	GENERATED_BODY()
+	
+public:
+	AAuraEnemy();
+
+	//开启后处理描边
+	virtual void OpenHighLight() override;
+	//关闭后处理描边
+	virtual void CloceHighLight() override;
+
+};

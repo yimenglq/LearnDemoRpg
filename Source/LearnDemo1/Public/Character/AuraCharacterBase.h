@@ -4,7 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework\CharacterMovementComponent.h"
+#include"Components\CapsuleComponent.h"
 #include "AuraCharacterBase.generated.h"
+
+/*
+*  人形基类 
+* 
+*/
 
 UCLASS()
 class LEARNDEMO1_API AAuraCharacterBase : public ACharacter
