@@ -5,6 +5,7 @@
 
 #include "GameFramework\SpringArmComponent.h"
 #include "Camera\CameraComponent.h"
+#include <Player/AuraPlayerState.h>
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -39,3 +40,33 @@ void AAuraCharacter::BeginPlay()
 
 }
 
+
+
+void AAuraCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilityActorInfo();
+
+}
+
+
+void AAuraCharacter::OnRep_PlayerState()
+{
+	InitAbilityActorInfo();
+}
+
+void AAuraCharacter::InitAbilityActorInfo()
+{
+
+	//获得玩家状态
+	AAuraPlayerState* PlayS = GetPlayerState<AAuraPlayerState>();
+	check(PlayS);
+	//初始化GAS组件
+	PlayS->GetAbilitySystemComponent()->InitAbilityActorInfo(PlayS, this);
+
+	//存储GAS组件
+	AbilitySystemComponent = PlayS->GetAbilitySystemComponent();
+	//存储属性集合
+	AttributeSet = PlayS->GetAttributeSet();
+}

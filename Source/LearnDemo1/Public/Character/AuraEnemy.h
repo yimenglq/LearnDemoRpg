@@ -18,9 +18,16 @@ class LEARNDEMO1_API AAuraEnemy : public AAuraCharacterBase, public IHighLightIt
 public:
 	AAuraEnemy();
 
+
+	//overide IHighLightIterface
+
 	//开启后处理描边
 	virtual void OpenHighLight() override;
 	//关闭后处理描边
 	virtual void CloceHighLight() override;
+	//End 
+
+protected:
+	virtual void BeginPlay() override;
 
 };

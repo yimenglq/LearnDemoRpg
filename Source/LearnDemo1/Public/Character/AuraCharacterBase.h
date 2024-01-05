@@ -3,10 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include"GameplayAbilities\Public\AbilitySystemComponent.h"
+#include"GameplayAbilities\Public\AttributeSet.h"
+#include"GameplayAbilities\Public\AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include"Components\CapsuleComponent.h"
+
 #include "AuraCharacterBase.generated.h"
+
+
 
 /*
 *  人形基类 
@@ -14,22 +20,33 @@
 */
 
 UCLASS()
-class LEARNDEMO1_API AAuraCharacterBase : public ACharacter
+class LEARNDEMO1_API AAuraCharacterBase : public ACharacter,public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
+
 	AAuraCharacterBase();
 
+	//Override  IAbilitySystemInterface 相关
+	//获得GAS组件
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return  AbilitySystemComponent; };
+	//获得属性集合
+	UAttributeSet* GetAttributeSet() { return AttributeSet; };
+	// End  
+
 protected:
-	// Called when the game starts or when spawned
+	
 	virtual void BeginPlay() override;
 
 protected:
-	UPROPERTY(VisibleAnywhere,Category="AuraCharacterBase")
-	TObjectPtr<USkeletalMeshComponent> Weapons;//武器骨骼网格体
+	UPROPERTY(VisibleAnywhere,Category="AuraCharacterBase")//武器骨骼网格体
+	TObjectPtr<USkeletalMeshComponent> Weapons;
 
+	UPROPERTY(VisibleAnywhere, Category = "AuraCharacterBase")//GAS组件
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
+	UPROPERTY(VisibleAnywhere, Category = "AuraCharacterBase")//属性集合
+	TObjectPtr<UAttributeSet> AttributeSet;
 
 };

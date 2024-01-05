@@ -1,13 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "Character/AuraEnemy.h"
+
 
 AAuraEnemy::AAuraEnemy()
 {
+	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AuraAbilitySystemComponent");
+	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AuraAttributeSet");
+
 	//设定指定碰撞通道的 响应方式
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 	
+
 }
 
 void AAuraEnemy::OpenHighLight()
@@ -27,4 +33,13 @@ void AAuraEnemy::CloceHighLight()
 	//关闭自定义深度值
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapons->SetRenderCustomDepth(false);
+}
+
+void AAuraEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+	//初始化GAS组件 Owner 是创造者 Avatar 是在世界中具体的化身
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+
 }

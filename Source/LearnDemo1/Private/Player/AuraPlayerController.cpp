@@ -57,6 +57,7 @@ void AAuraPlayerController::SetupInputComponent()
 void AAuraPlayerController::FindEnemyActor()
 {
 	FHitResult HitResult;
+	//获取鼠标下碰撞的物体
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
 	
 	if (!HitResult.bBlockingHit) return;
