@@ -6,6 +6,8 @@
 #include "GameFramework\SpringArmComponent.h"
 #include "Camera\CameraComponent.h"
 #include <Player/AuraPlayerState.h>
+#include <UI/WidgetController/WidgetController.h>
+#include <UI/HUD/AuraHUD.h>
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -69,4 +71,17 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = PlayS->GetAbilitySystemComponent();
 	//存储属性集合
 	AttributeSet = PlayS->GetAttributeSet();
+
+	APlayerController* PCL = GetController<APlayerController>();
+	
+	if ( !PCL || !PCL->IsLocalController()) return;
+
+	//在本地的玩家控制器上运行
+	AAuraPlayerState* PS = PCL->GetPlayerState< AAuraPlayerState>();
+	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+	UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(PS->GetAttributeSet());
+	AAuraHUD* Hud =	Cast<AAuraHUD>( PCL->GetHUD());
+	if(Hud)
+	Hud->InitAuraHUD(FWidgetControllerParms(PCL, PS, ASC, AS));
+
 }

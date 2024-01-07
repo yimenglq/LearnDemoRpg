@@ -7,9 +7,10 @@
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
-	InitHealth(100);
+	InitHealth(50);
 	InitMaxHealth(100);
-
+	InitMana(90);
+	InitMaxMana(100);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -30,4 +31,14 @@ void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 void UAuraAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxHealth, OldMaxHealth);
+}
+
+void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Mana, OldMana);
+}
+
+void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxMana, OldMaxMana);
 }

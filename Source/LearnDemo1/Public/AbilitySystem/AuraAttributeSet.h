@@ -39,11 +39,26 @@ public:
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxHealth);
 
+	UFUNCTION()
+	void OnRep_Mana(const FGameplayAttributeData& OldMana);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Mana);
+
+	UFUNCTION()
+	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
+
 public:
-	UPROPERTY(ReplicatedUsing = OnRep_Health)
-	FGameplayAttributeData Health;//健康（生命值）
+	UPROPERTY(ReplicatedUsing = OnRep_Health, EditDefaultsOnly, Category = "Attribute")//健康（生命值）
+	FGameplayAttributeData Health;
 
 
-	UPROPERTY(ReplicatedUsing = OnRep_MaxHealth)
-	FGameplayAttributeData MaxHealth;//最大健康（生命值）
+	UPROPERTY(ReplicatedUsing = OnRep_MaxHealth,EditDefaultsOnly,Category = "Attribute")//最大健康（生命值）
+	FGameplayAttributeData MaxHealth;
+
+	UPROPERTY(ReplicatedUsing = OnRep_Mana, EditDefaultsOnly, Category = "Attribute")//法力
+	FGameplayAttributeData Mana;
+
+
+	UPROPERTY(ReplicatedUsing = OnRep_MaxMana, EditDefaultsOnly, Category = "Attribute")//最大法力
+	FGameplayAttributeData MaxMana;
 };

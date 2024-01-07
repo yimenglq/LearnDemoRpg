@@ -38,9 +38,11 @@ void AAEffectActo::PostInitializeComponents()
 
 void AAEffectActo::BeginOvelap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
 	IAbilitySystemInterface* IASIF_AbilitySys = Cast<IAbilitySystemInterface>(OtherActor);
 	if (IASIF_AbilitySys)
 	{
+		//获取GAS控件中保存的指定类别的属性集合   保存位置在  UAbilitySystemComponent::InitializeComponent() 
 		const UAuraAttributeSet* CAAS_Attribute = Cast<UAuraAttributeSet>(IASIF_AbilitySys->GetAbilitySystemComponent()->GetAttributeSet(UAuraAttributeSet::StaticClass()));
 		auto * AAS_Attribute = const_cast<UAuraAttributeSet*>(CAAS_Attribute);
 		AAS_Attribute->SetHealth(AAS_Attribute->GetHealth() + 225.f);
