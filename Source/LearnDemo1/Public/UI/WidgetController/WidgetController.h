@@ -49,6 +49,12 @@ public:
 	virtual void Broadcast()const {};
 
 protected:
+
+	//绑定多播代理
+	virtual	void BindDelegateSignatureI_MULTICAST();
+
+
+protected:
 	UPROPERTY(BlueprintReadOnly,Category= "WidgetController")
 	TObjectPtr<APlayerController> OwnerPlayerController;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")

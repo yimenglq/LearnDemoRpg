@@ -5,54 +5,125 @@
 #include "Actor/AEffectActo.h"
 #include "Components/SphereComponent.h"
 #include <AbilitySystemInterface.h>
+#include <AbilitySystemBlueprintLibrary.h>
 
 // Sets default values
 AAEffectActo::AAEffectActo()
 {
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
-	ShapeComp = CreateDefaultSubobject<USphereComponent>("USphereComponent");
-
-	RootComponent = MeshComp;
-	//SetRootComponent(MeshComp);
-	ShapeComp->SetupAttachment(MeshComp);
-
 	PrimaryActorTick.bCanEverTick = false;
+	
+	
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneComponent"));
 
 }
 
-// Called when the game starts or when spawned
+
 void AAEffectActo::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-void AAEffectActo::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	
-	//绑定重叠事件
-	ShapeComp->OnComponentBeginOverlap.AddDynamic(this, &AAEffectActo::BeginOvelap);
-	ShapeComp->OnComponentEndOverlap.AddDynamic(this, &AAEffectActo::EndOverlap);
-}
 
-void AAEffectActo::BeginOvelap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+
+void AAEffectActo::BeginOvelap(AActor* OtherActor)
 {
-	
-	IAbilitySystemInterface* IASIF_AbilitySys = Cast<IAbilitySystemInterface>(OtherActor);
-	if (IASIF_AbilitySys)
+	if (InstantEffectTriggerPolicy == EEffectTriggerPolicy::BeginOvelap)
 	{
-		//获取GAS控件中保存的指定类别的属性集合   保存位置在  UAbilitySystemComponent::InitializeComponent() 
-		const UAuraAttributeSet* CAAS_Attribute = Cast<UAuraAttributeSet>(IASIF_AbilitySys->GetAbilitySystemComponent()->GetAttributeSet(UAuraAttributeSet::StaticClass()));
-		auto * AAS_Attribute = const_cast<UAuraAttributeSet*>(CAAS_Attribute);
-		AAS_Attribute->SetHealth(AAS_Attribute->GetHealth() + 225.f);
-		Destroy();
+		ApplyEffectToTarget(OtherActor, InstantGameplayEffectClass);
+	}
+	
+	if (DurationEffectTriggerPolicy == EEffectTriggerPolicy::BeginOvelap)
+	{
+		ApplyEffectToTarget(OtherActor, DurationGameplayEffectClass);
 	}
 
+	if (LastingEffectTriggerPolicy == EEffectTriggerPolicy::BeginOvelap)
+	{
+		ApplyEffectToTarget(OtherActor, LastingGameplayEffectClass);
+	}
+
+
 }
 
-void AAEffectActo::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AAEffectActo::EndOverlap(AActor* OtherActor)
 {
+	if (InstantEffectTriggerPolicy == EEffectTriggerPolicy::EndOvelap)
+	{
+		ApplyEffectToTarget(OtherActor, InstantGameplayEffectClass);
+	}
+
+	if (DurationEffectTriggerPolicy == EEffectTriggerPolicy::EndOvelap)
+	{
+		ApplyEffectToTarget(OtherActor, DurationGameplayEffectClass);
+	}
+
+	if (LastingEffectTriggerPolicy == EEffectTriggerPolicy::EndOvelap)
+	{
+		ApplyEffectToTarget(OtherActor, LastingGameplayEffectClass);
+	}
+	if (LastingEffectRemovePolicy == EEffectRemovePolicy::EndOvelapRemove)
+	{
+
+		RemoveActiveGameplayEffectToTarget(OtherActor);
+
+	}
+
+
+}
+
+void AAEffectActo::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	UAbilitySystemComponent* TargetASC =	UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target );
+	if (!TargetASC) return;
+
+	check(GameplayEffectClass);
+
+	//获取游戏效果上下文句柄
+	FGameplayEffectContextHandle	EffectContextHandle = TargetASC->MakeEffectContext();
+	//设置从中创建此效果的对象。
+	EffectContextHandle.AddSourceObject(this);
+	
+	//获得游戏效果句柄
+	FGameplayEffectSpecHandle EffectSpecHandle  = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1, EffectContextHandle);
+	//将游戏效果规范添加到自身
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle =  TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	
+	//判读持久性游戏效果是否可删除
+	if (LastingEffectRemovePolicy != EEffectRemovePolicy::NoRemove && ActiveGameplayEffectHandle.IsValid())
+	{
+		ActiveGameplayEffectHandles.Add(ActiveGameplayEffectHandle, TargetASC);
+	}
+	
+}
+
+void AAEffectActo::RemoveActiveGameplayEffectToTarget(AActor* Target)
+{
+
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+	if (!TargetASC) return;
+
+	//保存ActiveGameplayEffectHandles 需要删除的活动游戏效果句柄
+	TArray<FActiveGameplayEffectHandle> RemoveEffectHandles;
+	//在GAS组件删除掉活动游戏效果句柄
+	for (TPair<FActiveGameplayEffectHandle, UAbilitySystemComponent*>  EffectHandle : ActiveGameplayEffectHandles)
+	{
+		if (EffectHandle.Value == TargetASC)
+		{
+			//删除活动的游戏效果句柄
+			TargetASC->RemoveActiveGameplayEffect(EffectHandle.Key,1);
+			
+			RemoveEffectHandles.Add(EffectHandle.Key);
+			
+		}
+	}
+
+	//删除掉保存在ActiveGameplayEffectHandles 中的活动游戏效果句柄
+	for (FActiveGameplayEffectHandle EffectHandle : RemoveEffectHandles)
+	{
+		ActiveGameplayEffectHandles.Remove(EffectHandle);
+	}
+	
 
 }
 

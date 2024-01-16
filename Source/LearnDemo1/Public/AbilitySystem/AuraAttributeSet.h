@@ -47,6 +47,17 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
 
+	//Override UAttributeSet
+	
+	//GameplayAttributeData修改前
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	//GameplayAttributeData修改后
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+	
+
+	//End
+
 public:
 	UPROPERTY(ReplicatedUsing = OnRep_Health, EditDefaultsOnly, Category = "Attribute")//健康（生命值）
 	FGameplayAttributeData Health;
