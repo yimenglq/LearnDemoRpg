@@ -75,6 +75,10 @@ protected:
 
 protected:
 
+	
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "AEffectActo")//效果等级
+	float EffectLevel = 1;
+
 	//保存活动游戏效果 与 对应的GAS组件
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent* > ActiveGameplayEffectHandles;
 
@@ -100,5 +104,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AEffectActo|Lasting")
 	EEffectRemovePolicy  LastingEffectRemovePolicy = EEffectRemovePolicy::EndOvelapRemove;
+
+
 
 };

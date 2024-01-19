@@ -19,13 +19,17 @@ class LEARNDEMO1_API UAuraWidget : public UUserWidget
 
 
 public:
+	
+	//设置中间件
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetController(UWidgetController* InWidgetController);
+	
+	//蓝图可实现的函数
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
 	void WidgetControllerSet();
 
 protected:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)//中间件UI拿取数据的地方  
 	TObjectPtr<UWidgetController> WidgetController;
 
 	

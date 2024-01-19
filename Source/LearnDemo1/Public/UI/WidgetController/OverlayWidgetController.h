@@ -8,16 +8,45 @@
 
 #include "OverlayWidgetController.generated.h"
 
+
+
+struct FOnAttributeChangeData;
+
+USTRUCT(BlueprintType)
+struct FUIWidgetRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	//物品游戏标签
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTag MessageTag = FGameplayTag();
+
+	//消息文字
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Message = FText();
+
+	//显示在屏幕上的 UMG 控件
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<class UAuraWidget> MessageWidget;
+
+	//物品图片
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture2D* Image = nullptr;
+
+};
+
+
+
 //属性集合变更时的委托
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOverlayAttributeChangedSignature, float, NewValue);
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
-struct FOnAttributeChangeData;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class LEARNDEMO1_API UOverlayWidgetController : public UWidgetController
 {
 	GENERATED_BODY()
@@ -41,6 +70,14 @@ protected:
 	void OnMaxManaAttribute(const FOnAttributeChangeData& Data);
 	//End
 public:
+
+	UPROPERTY(EditDefaultsOnly, Category = "GAS|Message")//消息数据表
+	TObjectPtr<UDataTable> MessageDataTable;
+
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Message")//游戏效果附加时 触发的消息委托
+	FMessageWidgetRowSignature OnMessageWidgetRowSignature;
+
 	UPROPERTY(BlueprintAssignable,Category = "GAS|Attribute")//体力值的委托
 		FOnOverlayAttributeChangedSignature OnHealthChanged;
 
@@ -55,4 +92,31 @@ public:
 
 	
 
+	//返回消息数据表中的一段 根据名称
+	template<typename T>
+	T* GetMessgaeRow(const FName& Row);
+	//返回消息数据表中的一段 根据行号
+	template<typename T>
+	T* GetMessgaeRow(const uint32& iRow);
 };
+
+template<typename T>
+inline T* UOverlayWidgetController::GetMessgaeRow(const FName& Row)
+{
+	ensureMsgf(MessageDataTable, TEXT("MessageDataTable Is Not Null"));
+	T* InsRow = MessageDataTable->FindRow<T>(Row, TEXT(""));
+
+	return InsRow;
+}
+
+template<typename T>
+inline T* UOverlayWidgetController::GetMessgaeRow(const uint32& iRow)
+{   
+	ensureMsgf(MessageDataTable, TEXT("MessageDataTable Is Not Null"));
+	T* InsRow = nullptr;
+	TArray<T*> InsRows;
+	MessageDataTable->GetAllRows(L"", InsRows);	
+	if(	InsRows.Num() > iRow ) 
+		InsRow = InsRows[iRow];
+	return InsRow;
+}

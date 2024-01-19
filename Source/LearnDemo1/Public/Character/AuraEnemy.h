@@ -27,6 +27,12 @@ public:
 	virtual void CloceHighLight() override;
 	//End 
 
+
+	//Override  AAuraCharacterBase
+	virtual void InitAbilityActorInfo() override;
+
+	//End
+
 protected:
 	virtual void BeginPlay() override;
 

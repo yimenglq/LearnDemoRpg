@@ -33,7 +33,12 @@ struct FWidgetControllerParms
 };
 
 /**
- * 
+* 
+* 
+ *	直掌UI所需要的数据  逻辑层
+ *  UI不直接接触数据  
+ *	UI获取数据的中间者
+ *
  */
 UCLASS(BlueprintType)
 class LEARNDEMO1_API UWidgetController : public UObject

@@ -21,6 +21,10 @@ class LEARNDEMO1_API AAuraCharacter : public AAuraCharacterBase
 public:
 	AAuraCharacter();
 	
+	//Override  AAuraCharacterBase
+	virtual void InitAbilityActorInfo() override;
+
+	//End
 protected:
 	virtual void BeginPlay() override;
 
@@ -30,7 +34,7 @@ protected:
 	//当该Pawn被控制时  仅服务器调用
 	virtual void PossessedBy(AController* NewController) override;
 
-	
+
 
 
 protected:
@@ -44,6 +48,6 @@ protected:
 
 private:
 
-	//初始化GAS组件
-	void	InitAbilityActorInfo();
+	
+
 };

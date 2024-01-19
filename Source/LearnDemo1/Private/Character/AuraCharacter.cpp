@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include"AbilitySystem\AuraAbilitySystemComponent.h"
 
 #include "Character/AuraCharacter.h"
 
@@ -8,6 +8,7 @@
 #include <Player/AuraPlayerState.h>
 #include <UI/WidgetController/WidgetController.h>
 #include <UI/HUD/AuraHUD.h>
+
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -66,6 +67,8 @@ void AAuraCharacter::InitAbilityActorInfo()
 	check(PlayS);
 	//初始化GAS组件
 	PlayS->GetAbilitySystemComponent()->InitAbilityActorInfo(PlayS, this);
+	
+	Cast<UAuraAbilitySystemComponent>(PlayS->GetAbilitySystemComponent())->AbiltyActorInfoSet();
 
 	//存储GAS组件
 	AbilitySystemComponent = PlayS->GetAbilitySystemComponent();
@@ -83,5 +86,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AAuraHUD* Hud =	Cast<AAuraHUD>( PCL->GetHUD());
 	if(Hud)
 	Hud->InitAuraHUD(FWidgetControllerParms(PCL, PS, ASC, AS));
+
+
 
 }

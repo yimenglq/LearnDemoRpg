@@ -22,6 +22,33 @@ void UOverlayWidgetController::BindDelegateSignatureI_MULTICAST()
 	OwnerAuraAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(OwnerAuraAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::OnMaxHealthAttribute);
 	OwnerAuraAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(OwnerAuraAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::OnManaAttribute);
 	OwnerAuraAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(OwnerAuraAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::OnMaxManaAttribute);
+
+	OwnerAuraAbilitySystemComp->OnEffectTagsSignature.AddLambda(
+		[this](FGameplayTagContainer& TagContainer)
+		{
+			for (const FGameplayTag& tag : TagContainer)
+			{
+				// * 获取与 TagName 对应的 FGameplayTag
+				FGameplayTag Tag1 = FGameplayTag::RequestGameplayTag(TEXT("Message") );
+				//比对标签 如 tag = Message.da    Tag1 = Message    tag.MatchesTag(Tag1) return true;
+				//tag = Message    Tag1 = Message.a    tag.MatchesTag(Tag1) return false;
+				if (tag.MatchesTag(Tag1))
+				{
+					
+					
+					FUIWidgetRow* widgetRow = 	GetMessgaeRow<FUIWidgetRow>(tag.GetTagName());
+					OnMessageWidgetRowSignature.Broadcast(*widgetRow);
+
+				}
+
+			
+			}
+
+			
+
+		}
+	);
+
 }
 
 void UOverlayWidgetController::OnHealthAttribute(const FOnAttributeChangeData& Data)

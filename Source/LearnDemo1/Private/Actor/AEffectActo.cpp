@@ -85,7 +85,7 @@ void AAEffectActo::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffe
 	EffectContextHandle.AddSourceObject(this);
 	
 	//获得游戏效果句柄
-	FGameplayEffectSpecHandle EffectSpecHandle  = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1, EffectContextHandle);
+	FGameplayEffectSpecHandle EffectSpecHandle  = TargetASC->MakeOutgoingSpec(GameplayEffectClass, EffectLevel, EffectContextHandle);
 	//将游戏效果规范添加到自身
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle =  TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	
@@ -101,7 +101,7 @@ void AAEffectActo::RemoveActiveGameplayEffectToTarget(AActor* Target)
 {
 
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
-	if (!TargetASC) return;
+	if (!TargetASC &&  ActiveGameplayEffectHandles.Num() != 0 ) return;
 
 	//保存ActiveGameplayEffectHandles 需要删除的活动游戏效果句柄
 	TArray<FActiveGameplayEffectHandle> RemoveEffectHandles;

@@ -16,6 +16,11 @@ AAuraCharacterBase::AAuraCharacterBase()
 
 
 
+void AAuraCharacterBase::InitAbilityActorInfo()
+{
+
+}
+
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();

@@ -34,6 +34,9 @@ public:
 	//获得属性集合
 	UAttributeSet* GetAttributeSet() { return AttributeSet; };
 	// End  
+	// 
+	//初始化GAS组件
+	virtual void InitAbilityActorInfo();
 
 protected:
 	

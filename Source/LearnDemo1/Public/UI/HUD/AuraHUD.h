@@ -32,13 +32,16 @@ public:
 	UWidgetController* GetWidgetController();
 
 		
-private:
+
+
+protected:
 
 	TObjectPtr<UWidgetController> WidgetController; //中间件 WidgetController
 	
 	
-	TObjectPtr<UAuraWidget> Widget;
+	TObjectPtr<UAuraWidget> Widget;//主界面UI
 
+private:
 
 	UPROPERTY(EditAnywhere,Category = "AuraHUD")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
