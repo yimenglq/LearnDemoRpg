@@ -38,11 +38,32 @@ public:
 	//初始化GAS组件
 	virtual void InitAbilityActorInfo();
 
+	//初始化属性
+	virtual void InitAttributSet();
+
+	// 添加游戏效果到自己上
+	UFUNCTION(BlueprintCallable, Category = "AEffectActo")
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass);
+
 protected:
 	
 	virtual void BeginPlay() override;
 
 protected:
+	//即时
+	UPROPERTY(EditDefaultsOnly,Category = "AuraCharacterBase|Attribute")
+	TSubclassOf<UGameplayEffect> InitPrimaryEffect;//初始化主要属性
+	
+	//持久
+	UPROPERTY(EditDefaultsOnly, Category = "AuraCharacterBase|Attribute")
+	TSubclassOf<UGameplayEffect> lastingSecondaryEffect;//次要属性
+	UPROPERTY(EditDefaultsOnly, Category = "AuraCharacterBase|Attribute")
+	TSubclassOf<UGameplayEffect> lastingResistanceEffect;//抵抗属性
+	//即时
+	UPROPERTY(EditDefaultsOnly, Category = "AuraCharacterBase|Attribute")
+	TSubclassOf<UGameplayEffect> InitVitalEffect;//初始化重要属性
+
+
 	UPROPERTY(VisibleAnywhere,Category="AuraCharacterBase")//武器骨骼网格体
 	TObjectPtr<USkeletalMeshComponent> Weapons;
 

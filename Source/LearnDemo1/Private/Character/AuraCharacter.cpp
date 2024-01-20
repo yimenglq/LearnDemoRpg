@@ -74,6 +74,10 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = PlayS->GetAbilitySystemComponent();
 	//存储属性集合
 	AttributeSet = PlayS->GetAttributeSet();
+	
+	//初始化属性
+	InitAttributSet();
+
 
 	APlayerController* PCL = GetController<APlayerController>();
 	

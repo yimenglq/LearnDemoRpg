@@ -16,6 +16,16 @@ AAuraEnemy::AAuraEnemy()
 
 }
 
+void AAuraEnemy::InitAbilityActorInfo()
+{
+	//初始化GAS组件 Owner 是创造者 Avatar 是在世界中具体的化身
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbiltyActorInfoSet();
+	//初始化属性
+	InitAttributSet();
+
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -43,12 +53,6 @@ void AAuraEnemy::CloceHighLight()
 	Weapons->SetRenderCustomDepth(false);
 }
 
-void AAuraEnemy::InitAbilityActorInfo()
-{
-	//初始化GAS组件 Owner 是创造者 Avatar 是在世界中具体的化身
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbiltyActorInfoSet();
 
-}
 
 

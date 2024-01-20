@@ -14,18 +14,42 @@ AAuraCharacterBase::AAuraCharacterBase()
 
 }
 
-
+void AAuraCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
 
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 
 }
 
-void AAuraCharacterBase::BeginPlay()
+void AAuraCharacterBase::InitAttributSet()
 {
-	Super::BeginPlay();
-	
+	//主要属性
+	ApplyEffectToSelf(InitPrimaryEffect);
+	//次要属性     依赖 主要属性
+	ApplyEffectToSelf(lastingSecondaryEffect);
+	//抵抗属性
+	ApplyEffectToSelf(lastingResistanceEffect);
+	//重要要属性   依赖 主要属性
+	ApplyEffectToSelf(InitVitalEffect);
 }
+
+void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	check(GameplayEffectClass);
+	check(AbilitySystemComponent);
+
+	FGameplayEffectContextHandle EffectContextHandle = AbilitySystemComponent->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+
+	FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffectClass, 1.0f, EffectContextHandle);
+	AbilitySystemComponent->ApplyGameplayEffectToSelf(EffectSpecHandle.Data.Get()->Def, EffectSpecHandle.Data.Get()->GetLevel(), EffectContextHandle);
+}
+
+
 
 
 

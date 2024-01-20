@@ -33,7 +33,7 @@ public:
 
 		
 
-
+	//UWidgetController* GetWidgetController();
 protected:
 
 	TObjectPtr<UWidgetController> WidgetController; //ÖÐ¼ä¼þ WidgetController
