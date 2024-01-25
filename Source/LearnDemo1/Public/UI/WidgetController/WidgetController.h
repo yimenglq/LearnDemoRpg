@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include <Player/AuraPlayerState.h>
+#include"AbilitySystem/AuraAttributeSet.h"
+#include"AbilitySystem/AuraAbilitySystemComponent.h"
+
 #include "WidgetController.generated.h"
 
 
@@ -47,6 +50,10 @@ class LEARNDEMO1_API UWidgetController : public UObject
 	
 
 public:
+
+	UFUNCTION(BlueprintCallable)
+	void InitBroadcast() const;
+
 
 	void SetWidgetControllerParams(const FWidgetControllerParms& Parms);
 

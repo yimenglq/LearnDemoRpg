@@ -4,9 +4,75 @@
 #include"GameplayAbilities\Public\AbilitySystemComponent.h"
 
 #include "AbilitySystem/AuraAttributeSet.h"
+#include <FAuraGamePlayTags.h>
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
+	InitTagsToAttributeSignature();
+}
+
+void UAuraAttributeSet::InitTagsToAttributeSignature()
+{
+	FAuraGamePlayTags& AGPT = FAuraGamePlayTags::Get();
+	auto lbdFunPtr = [this](FGameplayTag& tag, auto* Funptr)
+		{
+			FAttributeSignature AS;
+			AS.BindStatic(Funptr);
+			TagsToAttributeSignature.Add(tag, AS);
+		};
+
+	/*
+ * 主要属性
+ * Primary Attributes
+ */
+
+	lbdFunPtr(AGPT.Attribute_Primary_Strength, GetStrengthAttribute);
+	lbdFunPtr(AGPT.Attribute_Primary_Intelligence, GetIntelligenceAttribute);
+	lbdFunPtr(AGPT.Attribute_Primary_Resilience, GetResilienceAttribute);
+	lbdFunPtr(AGPT.Attribute_Primary_Vigor, GetVigorAttribute);
+	
+	
+	/*
+* 次要属性
+ * Secondary Attributes
+ */
+	lbdFunPtr(AGPT.Attribute_Secondary_Armor, GetArmorAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_BlockChance, GetBlockChanceAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_MaxHealth, GetMaxHealthAttribute);
+	lbdFunPtr(AGPT.Attribute_Secondary_MaxMana, GetMaxManaAttribute);
+	//End
+
+	/* 抵抗属性
+	 * Resistance Attributes
+	 */
+	lbdFunPtr(AGPT.Attribute_Resistance_FireResistance, GetFireResistanceAttribute);
+	lbdFunPtr(AGPT.Attribute_Resistance_LightningResistance, GetLightningResistanceAttribute);
+	lbdFunPtr(AGPT.Attribute_Resistance_ArcaneResistance, GetArcaneResistanceAttribute);
+	lbdFunPtr(AGPT.Attribute_Resistance_PhysicalResistance, GetPhysicalResistanceAttribute);
+
+	/*
+	* 重要属性
+	 * Vital Attributes
+	 */
+	lbdFunPtr(AGPT.Attribute_Vital_Health, GetHealthAttribute);
+	//lbdFunPtr(AGPT.Attribute_Vital_Mana, GetManaAttribute);
+	
+
+
+
+	InitAttributeSetAndTag(Mana, Attribute_Vital_Mana);
+	//end
+
+
+
+	
+	
 
 }
 
@@ -80,6 +146,19 @@ void UAuraAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribu
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMana());
 	}
+}
+
+TArray<FGameplayTag> UAuraAttributeSet::GetAttributeTages() const
+{
+
+	TArray<FGameplayTag> Tags;
+
+	for ( auto par : TagsToAttributeSignature)
+	{
+		Tags.Add(par.Key);
+	}
+
+	return Tags;
 }
 
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)

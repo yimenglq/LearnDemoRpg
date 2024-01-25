@@ -4,6 +4,11 @@
 //#include"AbilitySystem\AuraAttributeSet.h"
 #include"UI/WidgetController/WidgetController.h"
 
+void UWidgetController::InitBroadcast() const
+{
+	Broadcast();
+}
+
 void UWidgetController::SetWidgetControllerParams(const FWidgetControllerParms& Parms)
 {
 	OwnerPlayerController = Parms.PlayerController;

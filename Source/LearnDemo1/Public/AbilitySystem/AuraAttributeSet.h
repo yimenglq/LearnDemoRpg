@@ -14,6 +14,22 @@
  	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
  	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+//为了让标签与属性一对一 
+#define InitAttributeSetAndTag(GameplayAttributeDataName,GameplayTagName)\
+{FAuraGamePlayTags& H_AGPT = FAuraGamePlayTags::Get(); \
+auto H_lbdFunPtr = [this](FGameplayTag& tag, auto* Funptr)\
+{\
+FAttributeSignature AS; \
+AS.BindStatic(Funptr); \
+TagsToAttributeSignature.Add(tag, AS); \
+}; \
+\
+H_lbdFunPtr(AGPT.GameplayTagName, Get##GameplayAttributeDataName##Attribute); \
+}
+
+
+DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
+
 /**
  * 属性集
  */
@@ -25,6 +41,8 @@ class LEARNDEMO1_API UAuraAttributeSet : public UAttributeSet
 
 public:
 	UAuraAttributeSet();
+
+	void InitTagsToAttributeSignature();
 
 	// override UObject   
 	// 注册复制
@@ -48,6 +66,14 @@ public:
 
 
 public:
+
+	//游戏标签和属性对应的集合
+	TMap<FGameplayTag, FAttributeSignature> TagsToAttributeSignature;
+
+	UFUNCTION(BlueprintCallable,Category = "AuraAttributeSet")
+	TArray<FGameplayTag> GetAttributeTages()const;
+
+
 
 	/*
 	 * 主要属性

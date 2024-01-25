@@ -2,6 +2,7 @@
 
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include <FAuraGamePlayTags.h>
 
 void UAuraAbilitySystemComponent::AbiltyActorInfoSet()
 {
@@ -11,6 +12,11 @@ void UAuraAbilitySystemComponent::AbiltyActorInfoSet()
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::EffectApplied);
 
 	bInited = true;
+
+	//²âÊÔ´úÂë
+	FAuraGamePlayTags::Get().Attribute_Primary_Strength.GetTagName();
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FAuraGamePlayTags::Get().Attribute_Primary_Strength.GetTagName().ToString());
 }
 
 void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComp, const FGameplayEffectSpec& GameplayEffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)

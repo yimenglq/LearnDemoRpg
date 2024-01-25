@@ -46,7 +46,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidge
 /**
  * 
  */
-UCLASS(Blueprintable)
+UCLASS(BlueprintType, Blueprintable)
 class LEARNDEMO1_API UOverlayWidgetController : public UWidgetController
 {
 	GENERATED_BODY()

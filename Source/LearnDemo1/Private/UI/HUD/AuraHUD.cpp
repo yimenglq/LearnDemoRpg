@@ -5,6 +5,7 @@
 #include"AbilitySystem/AuraAttributeSet.h"
 #include"AbilitySystem/AuraAbilitySystemComponent.h"
 #include <UI/WidgetController/OverlayWidgetController.h>
+#include"UI/WidgetController/OverlayMenuWidgetController.h"
 #include "UI/HUD/AuraHUD.h"
 
 
@@ -17,8 +18,8 @@ void AAuraHUD::InitAuraHUD(const FWidgetControllerParms& InParms)
 	Widget = Cast<UAuraWidget>( CreateWidget(GetWorld(), WidgetClass));
 	check(Widget);
 	UWidgetController* WCl = GetWidgetController();
-	WCl->SetWidgetControllerParams(InParms);
-
+	
+		
 	Widget->SetWidgetController(WCl);
 
 	WCl->Broadcast();
@@ -33,8 +34,29 @@ UWidgetController* AAuraHUD::GetWidgetController()
 	if (WidgetController == NULL)
 	{
 		WidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
-		return WidgetController;
+		
+		APlayerController* PC = GetOwningPlayerController();
+		AAuraPlayerState* PS =	PC->GetPlayerState<AAuraPlayerState>();
+		UAuraAbilitySystemComponent* ASC =	Cast<UAuraAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+		UAuraAttributeSet* AS =	Cast<UAuraAttributeSet>(PS->GetAttributeSet());
+
+		FWidgetControllerParms Parms(PC,PS,ASC,AS);
+
+		WidgetController->SetWidgetControllerParams(Parms);
+
 	}
 
 	return WidgetController;
+}
+
+UWidgetController* AAuraHUD::GetOverlayMenuWidgetController()
+{
+	if (OverlayMenuWidgetController == NULL)
+	{
+		OverlayMenuWidgetController = GetTypeWidgetController(OverlayMenuWidgetControllerClass);
+		OverlayMenuWidgetController->Broadcast();
+	}
+	
+
+	return OverlayMenuWidgetController;
 }
