@@ -18,6 +18,7 @@ class LEARNDEMO1_API AAuraPlayerState : public APlayerState, public IAbilitySyst
 	GENERATED_BODY()
 
 public:
+
 	AAuraPlayerState();
 
 	

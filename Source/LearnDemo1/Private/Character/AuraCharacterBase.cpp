@@ -2,6 +2,7 @@
 
 
 #include "Character/AuraCharacterBase.h"
+#include <AbilitySystem/AuraAbilitySystemComponent.h>
 
 // Sets default values
 AAuraCharacterBase::AAuraCharacterBase()
@@ -47,6 +48,29 @@ void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 
 	FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffectClass, 1.0f, EffectContextHandle);
 	AbilitySystemComponent->ApplyGameplayEffectToSelf(EffectSpecHandle.Data.Get()->Def, EffectSpecHandle.Data.Get()->GetLevel(), EffectContextHandle);
+}
+
+
+
+void AAuraCharacterBase::AddCharacterAbility(TSubclassOf<UGameplayAbility>& AbilityClass)
+{
+
+}
+
+void AAuraCharacterBase::AddCharacterAbilityes(TArray<TSubclassOf<UGameplayAbility>>& AbilityClasses)
+{
+	check(AbilitySystemComponent);
+
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AddCharacterAbilityes(AbilityClasses);
+}
+
+void AAuraCharacterBase::AddCharacterAbilityes()
+{
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	//将开始时的游戏能力加入该角色的GAS能力组件
+	AuraAbilitySystemComponent->AddCharacterAbilityes(StartupAbilityes);
 }
 
 

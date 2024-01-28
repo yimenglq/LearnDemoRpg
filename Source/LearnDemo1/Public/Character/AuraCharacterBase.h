@@ -45,11 +45,26 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AEffectActo")
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
+	void AddCharacterAbility(TSubclassOf<UGameplayAbility>& AbilityClass);
+	void AddCharacterAbilityes(	TArray<	TSubclassOf<UGameplayAbility> > & AbilityClasses);
+	
+	void AddCharacterAbilityes();
+
+
+
+
 protected:
 	
 	virtual void BeginPlay() override;
 
 protected:
+
+
+	//游戏开始时启动的游戏能力
+	UPROPERTY(EditAnywhere,Category = "AuraCharacterBase|Ability")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilityes;
+
+
 	//即时
 	UPROPERTY(EditDefaultsOnly,Category = "AuraCharacterBase|Attribute")
 	TSubclassOf<UGameplayEffect> InitPrimaryEffect;//初始化主要属性
@@ -73,4 +88,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "AuraCharacterBase")//属性集合
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+
+	
 };

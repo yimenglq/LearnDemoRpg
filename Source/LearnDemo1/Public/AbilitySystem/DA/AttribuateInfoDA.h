@@ -50,5 +50,11 @@ public:
 	//属性信息集
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray< FAttribuateInfo> AttribuateInfoes;
+	//属性信息集
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray< FAttribuateInfo> TestInfoes;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float d;
 
 };

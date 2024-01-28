@@ -4,7 +4,15 @@
 #include "FAuraGamePlayTags.h"
 #include "GameplayTagsManager.h"
 
+#define AddGameplayTag(FGameplayTagVariableName, TagName,TagDevComment)\
+ AuraGamePlayTags.SetGameplayTag(\
+	(FGameplayTag&&)AuraGamePlayTags.FGameplayTagVariableName,\
+	UGameplayTagsManager::Get().AddNativeGameplayTag(#TagName, TagDevComment )\
+ );
+
 FAuraGamePlayTags FAuraGamePlayTags::AuraGamePlayTags = FAuraGamePlayTags();
+
+
 
 
 
@@ -79,6 +87,23 @@ void FAuraGamePlayTags::InitalizNativeGameplayTags()
 		AuraGamePlayTags.SetGameplayTag((FGameplayTag&&)AuraGamePlayTags.Attribute_Vital_Mana , UGameplayTagsManager::Get().AddNativeGameplayTag("Attributes.Vital.Mana", TEXT("这是一个重要属性标签，名为法力")));
 	
 	//End
+
+
+
+	/*
+	* 游戏能力标签
+	*AbilityInput
+	*/
+		AddGameplayTag(AbilityInput_LMB, AbilityInput.LMB, L"This is AbilityInput");
+		AddGameplayTag(AbilityInput_RMB, AbilityInput.RMB, L"This is AbilityInput");
+		AddGameplayTag(AbilityInput_1, AbilityInput.1,L"This is AbilityInput");
+		AddGameplayTag(AbilityInput_2, AbilityInput.2,L"This is AbilityInput");
+		AddGameplayTag(AbilityInput_3, AbilityInput.3,L"This is AbilityInput");
+		AddGameplayTag(AbilityInput_4, AbilityInput.4,L"This is AbilityInput");
+		
+		
+		//End
+
 }
 
 void FAuraGamePlayTags::SetGameplayTag(FGameplayTag&& SroTag, const FGameplayTag& AddNewTag)
@@ -88,4 +113,4 @@ void FAuraGamePlayTags::SetGameplayTag(FGameplayTag&& SroTag, const FGameplayTag
 	Tages.Add(&SroTag);
 }
 
-
+#undef AddGameplayTag 

@@ -86,6 +86,17 @@ public:
 	FGameplayTag Attribute_Vital_Mana;
 
 
+	/*
+	* 游戏能力标签
+	* AbilityInput
+	*/
+	FGameplayTag AbilityInput_LMB;
+	FGameplayTag AbilityInput_RMB;
+	FGameplayTag AbilityInput_1;
+	FGameplayTag AbilityInput_2;
+	FGameplayTag AbilityInput_3;
+	FGameplayTag AbilityInput_4;
+
 
 protected:
 	
