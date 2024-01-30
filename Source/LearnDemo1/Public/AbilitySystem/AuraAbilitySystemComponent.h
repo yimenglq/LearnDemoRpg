@@ -27,6 +27,12 @@ public:
 	//游戏效果附加时触发的资产标签容器多播代理
 	FEffectTagsSignature OnEffectTagsSignature;
 	
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+
+	void AbilityInputTagHold(const FGameplayTag& InputTag);
+
 	//给角色添加多个游戏能力
 	void AddCharacterAbilityes(TArray<TSubclassOf<UGameplayAbility>> & Abilityes);
 	//给角色添加单个游戏能力

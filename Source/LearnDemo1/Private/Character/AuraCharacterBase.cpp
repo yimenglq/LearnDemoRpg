@@ -13,6 +13,10 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapons->SetupAttachment(GetMesh(), "WeaponHandSocket");//将组件绑定到骨骼网格体的 WeaponHandSocket 插槽上
 
 
+	//更改此 PrimitiveComponent 的 ResponseToChannels 容器的成员  更改碰撞通道 响应方式
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	
 }
 
 void AAuraCharacterBase::BeginPlay()

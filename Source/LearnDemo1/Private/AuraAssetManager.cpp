@@ -3,6 +3,7 @@
 
 #include "AuraAssetManager.h"
 #include <FAuraGamePlayTags.h>
+#include"GameplayAbilities\Public\AbilitySystemGlobals.h"
 
 UAuraAssetManager& UAuraAssetManager::Get()
 {
@@ -16,5 +17,9 @@ void UAuraAssetManager::StartInitialLoading()
 	Super::StartInitialLoading();
 	//调用初始化需要加载的标签
 	FAuraGamePlayTags::InitalizNativeGameplayTags();
+	
+	//这是FGameplayAbilityTargetData 必须的前提依赖
+	UAbilitySystemGlobals::Get().InitGlobalData();
+
 
 }

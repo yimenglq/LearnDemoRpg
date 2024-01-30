@@ -53,6 +53,12 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	AddCharacterAbilityes();
 }
 
+void AAuraCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+}
+
 
 void AAuraCharacter::OnRep_PlayerState()
 {
@@ -84,12 +90,12 @@ void AAuraCharacter::InitAbilityActorInfo()
 	if ( !PCL || !PCL->IsLocalController()) return;
 
 	//在本地的玩家控制器上运行
-	AAuraPlayerState* PS = PCL->GetPlayerState< AAuraPlayerState>();
-	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(PS->GetAbilitySystemComponent());
-	UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(PS->GetAttributeSet());
+	//AAuraPlayerState* PS = PCL->GetPlayerState< AAuraPlayerState>();
+	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(PlayS->GetAbilitySystemComponent());
+	UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(PlayS->GetAttributeSet());
 	AAuraHUD* Hud =	Cast<AAuraHUD>( PCL->GetHUD());
 	if(Hud)
-	Hud->InitAuraHUD(FWidgetControllerParms(PCL, PS, ASC, AS));
+	Hud->InitAuraHUD(FWidgetControllerParms(PCL, PlayS, ASC, AS));
 
 
 

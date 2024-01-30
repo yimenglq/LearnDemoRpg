@@ -9,7 +9,6 @@
 #include "GameFramework/Character.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include"Components\CapsuleComponent.h"
-
 #include "AuraCharacterBase.generated.h"
 
 
@@ -50,7 +49,7 @@ public:
 	
 	void AddCharacterAbilityes();
 
-
+	TObjectPtr<USkeletalMeshComponent> GetWeapons()const { return Weapons; }
 
 
 protected:
@@ -79,7 +78,7 @@ protected:
 	TSubclassOf<UGameplayEffect> InitVitalEffect;//初始化重要属性
 
 
-	UPROPERTY(VisibleAnywhere,Category="AuraCharacterBase")//武器骨骼网格体
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AuraCharacterBase")//武器骨骼网格体
 	TObjectPtr<USkeletalMeshComponent> Weapons;
 
 	UPROPERTY(VisibleAnywhere, Category = "AuraCharacterBase")//GAS组件

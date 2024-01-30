@@ -19,6 +19,9 @@
 
 //#include <ApplicationCore/Private/Windows/WindowsApplication.cpp>
 
+static TAutoConsoleVariable<bool> ConsoleVariable(TEXT("PC.Debug"), true, TEXT("Draw"), ECVF_Cheat);//控制台变量定义
+
+
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;//网络复制 允许
@@ -71,7 +74,10 @@ void AAuraPlayerController::SetupInputComponent()
 	for (FInputToTag& AIC : AuraInputConfig->InputConfiges)
 	{
 		EInputComp->BindAction(AIC.InputAction, ETriggerEvent::Started, this, &AAuraPlayerController::AbilityInputTagPressed, AIC.InputTag);
-
+		EInputComp->BindAction(AIC.InputAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::AbilityInputTagHold, AIC.InputTag);
+		EInputComp->BindAction(AIC.InputAction, ETriggerEvent::Canceled, this, &AAuraPlayerController::AbilityInputTagReleased, AIC.InputTag);
+		EInputComp->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+		EInputComp->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	}
 	
 }
@@ -170,7 +176,7 @@ void AAuraPlayerController::AutoMove()
 			{
 				FHitResult Hit;
 				const TArray<AActor*> ActorsToIgnore;
-				if (UKismetSystemLibrary::LineTraceSingleByProfile(aPawn, Location, MoveLocation, Cast<AAuraCharacterBase>(aPawn)->GetCapsuleComponent()->GetCollisionProfileName(), false, ActorsToIgnore, EDrawDebugTrace::None, Hit, true))
+				if (UKismetSystemLibrary::LineTraceSingleByProfile(aPawn, Location, MoveLocation, Cast<AAuraCharacterBase>(aPawn)->GetCapsuleComponent()->GetCollisionProfileName(), false, ActorsToIgnore, EDrawDebugTrace::Persistent, Hit, true))
 				{
 					bIsStopAutoRido = false;
 				}
@@ -182,15 +188,20 @@ void AAuraPlayerController::AutoMove()
 			}
 				
 				aPawn->AddMovementInput(MoveDirection, 1.f);
-				DrawDebugAltCone(GetWorld(), Location, MoveDirection.Rotation(), 10.f, 3.f, 3.f, FColor::Green, false, 20.f);
+				if(ConsoleVariable.GetValueOnAnyThread())
+				 DrawDebugAltCone(GetWorld(), Location, MoveDirection.Rotation(), 10.f, 3.f, 3.f, FColor::Green, false, 20.f);
 				
 				DrawDebugSphere(GetWorld(), SplineLocation, 20.f, 6, FColor::Blue, false, 1.f);
 
 				if ( (MoveLocation - Location).Length()  <= StopAutoRido)
 				{
 					bIsStopAutoRido = true;
-					if( (MoveLocation - Location).Length() <= 100.f && bIsStopAutoRido)
+					if ((MoveLocation - Location).Length() <= 100.f && bIsStopAutoRido)
+					{
 						bIsAutoRunMove = false;
+						bIsStopAutoRido = false;
+					}
+						
 				}
 				
 		}
@@ -228,11 +239,12 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	if (InputTag.MatchesTagExact(FAuraGamePlayTags::Get().AbilityInput_LMB))
+	if (InputTag.MatchesTagExact(FAuraGamePlayTags::Get().AbilityInput_LMB) && !ThisActor)
 	{
 		//获取游戏服务器时间
 		ThisLMBClickedTime = GetWorld()->GetGameState()->GetServerWorldTimeSeconds();
-		if ( (ThisLMBClickedTime - LastLMBClickedTime) < TimeInterval && !Cast<AAuraEnemy>(ThisActor) )
+		bTwoClick = (ThisLMBClickedTime - LastLMBClickedTime) < TimeInterval;
+		if ( bTwoClick && !Cast<AAuraEnemy>(ThisActor) )
 		{
 
 			bIsAutoRunMove = true;
@@ -266,33 +278,31 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 			
 		LastLMBClickedTime = ThisLMBClickedTime;
 
+		return;
 	}
 
-
-
-
-
-	/////
 	AAuraCharacterBase* ACB = Cast<AAuraCharacterBase>(GetPawn());
 	if (ACB)
 	{
 
 		if (UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(ACB->GetAbilitySystemComponent()))
 		{
-			//返回所有可激活能力的列表
-			TArray<FGameplayAbilitySpec>& AbilitySpeces = ASC->GetActivatableAbilities();
-			for (FGameplayAbilitySpec& AbilitySpec : AbilitySpeces)
-			{
-				//判断该能力中 是否不处于活动状态 且 是否与当前的启动标签相同 
-				if (!AbilitySpec.IsActive() && AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
-				{
-					AbilitySpec.InputPressed = true;
-					//尝试激活给定的游戏能力
-					ASC->TryActivateAbility(AbilitySpec.Handle);
+			ASC->AbilityInputTagPressed(InputTag);
 
-				}
 
-			}
+			////返回所有可激活能力的列表
+			//TArray<FGameplayAbilitySpec>& AbilitySpeces = ASC->GetActivatableAbilities();
+			//for (FGameplayAbilitySpec& AbilitySpec : AbilitySpeces)
+			//{
+			//	//判断该能力中 是否不处于活动状态 且 是否与当前的启动标签相同 
+			//	if (!AbilitySpec.IsActive() && AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+			//	{
+			//		AbilitySpec.InputPressed = true;
+			//		//尝试激活给定的游戏能力
+			//		ASC->TryActivateAbility(AbilitySpec.Handle);
+			//	}
+
+			//}
 		}
 	}
 
@@ -302,6 +312,40 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	
+	AAuraCharacterBase* ACB = Cast<AAuraCharacterBase>(GetPawn());
+	if (ACB)
+	{
 
+		if (UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(ACB->GetAbilitySystemComponent()))
+		{
+			ASC->AbilityInputTagReleased(InputTag);
+		}
+	}
+}
+
+void AAuraPlayerController::AbilityInputTagHold(FGameplayTag InputTag)
+{
+	if (InputTag.MatchesTagExact(FAuraGamePlayTags::Get().AbilityInput_LMB))
+	{
+		APawn* aPawn = GetPawn();
+		if (aPawn)
+		{
+			FVector Normal = (ThisHitResult.ImpactPoint - aPawn->GetActorLocation()).GetSafeNormal();
+			aPawn->AddMovementInput(Normal);
+			if(!bTwoClick)
+			 bIsAutoRunMove = false;
+		}
+
+	}
+
+	if (InputTag.MatchesTagExact(FAuraGamePlayTags::Get().AbilityInput_RMB) && bShiftKeyDown)
+	if (AAuraCharacterBase* ACB = Cast<AAuraCharacterBase>(GetPawn()))
+	{
+
+		if (UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(ACB->GetAbilitySystemComponent()))
+		{
+			ASC->AbilityInputTagHold(InputTag);
+		}
+	}
 }
 

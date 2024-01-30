@@ -72,6 +72,7 @@ inline	WclType* AAuraHUD::GetTypeWidgetController(TSubclassOf<WclType> WidgetCon
 
 	APlayerController* PC = GetOwningPlayerController();
 	AAuraPlayerState* PS = PC->GetPlayerState<AAuraPlayerState>();
+	PS = PS ? PS : PC->GetPawn()->GetPlayerState<AAuraPlayerState>();
 	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 	UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(PS->GetAttributeSet());
 

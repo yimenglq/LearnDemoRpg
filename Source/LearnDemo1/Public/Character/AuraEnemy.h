@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include"Iterface\HighLightIterface.h"
+#include"Iterface\CombatInterface.h"
 #include "AuraEnemy.generated.h"
 
 /**
  * µ–∑ΩNPC»À–Œ
  */
 UCLASS()
-class LEARNDEMO1_API AAuraEnemy : public AAuraCharacterBase, public IHighLightIterface
+class LEARNDEMO1_API AAuraEnemy : public AAuraCharacterBase, public IHighLightIterface, public ICombatInterface
 {
 	GENERATED_BODY()
 	

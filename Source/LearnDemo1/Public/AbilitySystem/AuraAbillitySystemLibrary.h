@@ -16,9 +16,14 @@ class LEARNDEMO1_API UAuraAbillitySystemLibrary : public UBlueprintFunctionLibra
 {
 	GENERATED_BODY()
 	
+public:
+
 	UFUNCTION(BlueprintCallable,Category = "AuraAbillitySystemLibrary")
 	static UWidgetController* GetHUDWidgetController(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbillitySystemLibrary")
 	static UWidgetController* GetOverlayMenuWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbillitySystemLibrary")
+	static FHitResult GetThisHitPlayController(const UObject* WorldContextObject);
 };

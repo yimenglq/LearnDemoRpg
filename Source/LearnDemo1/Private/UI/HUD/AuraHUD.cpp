@@ -37,6 +37,7 @@ UWidgetController* AAuraHUD::GetWidgetController()
 		
 		APlayerController* PC = GetOwningPlayerController();
 		AAuraPlayerState* PS =	PC->GetPlayerState<AAuraPlayerState>();
+		PS = PS ? PS : PC->GetPawn()->GetPlayerState<AAuraPlayerState>();
 		UAuraAbilitySystemComponent* ASC =	Cast<UAuraAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 		UAuraAttributeSet* AS =	Cast<UAuraAttributeSet>(PS->GetAttributeSet());
 

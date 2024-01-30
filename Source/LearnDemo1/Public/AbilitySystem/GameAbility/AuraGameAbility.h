@@ -22,7 +22,7 @@ public:
 
 	//Override UGameplayAbility
 	
-	/** Actually activate ability, do not call this directly */
+	/**激活能力  不要直接调用*/
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,

@@ -13,8 +13,8 @@ AAuraPlayerState::AAuraPlayerState()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);//设置复制模式   仅将最小的游戏效果信息复制到模拟代理，但将完整信息复制到所有者和自治代理
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AuraAttributeSet");
-
-
+	
+	SetReplicates(true);
 	NetUpdateFrequency = 100.f;//  考虑复制此执行组件的频率（每秒）
 }
 

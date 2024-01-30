@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
+#include"Iterface\CombatInterface.h"
+#include"Player\AuraPlayerState.h"
 #include "AuraCharacter.generated.h"
 
 class USpringArmComponent;
@@ -13,7 +15,7 @@ class UCameraComponent;
  *  玩家人形
  */
 UCLASS()
-class LEARNDEMO1_API AAuraCharacter : public AAuraCharacterBase
+class LEARNDEMO1_API AAuraCharacter : public AAuraCharacterBase, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -25,6 +27,12 @@ public:
 	virtual void InitAbilityActorInfo() override;
 
 	//End
+	
+	//Override ICombatInterface
+	virtual int32	GetLevel()const override {	if (AAuraPlayerState* PS = Cast<AAuraPlayerState>(GetPlayerState()) )  return PS->Level;  else   return 0; };
+	//End
+
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -34,7 +42,7 @@ protected:
 	//当该Pawn被控制时  仅服务器调用
 	virtual void PossessedBy(AController* NewController) override;
 
-
+	virtual void Tick(float DeltaSeconds)override;
 
 
 protected:

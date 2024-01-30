@@ -31,6 +31,8 @@ public:
 
 
 
+
+	int32 Level = 1;
 protected:
 
 	UPROPERTY()//GAS×é¼þ

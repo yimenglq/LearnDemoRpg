@@ -32,6 +32,10 @@ protected:
 	virtual void SetupInputComponent()override;
 
 
+public:
+
+	FHitResult GetThisHit()const { return ThisHitResult; }
+
 
 protected:
 
@@ -44,6 +48,9 @@ protected:
 	//判断为双击的时间允许间隔
 	UPROPERTY(EditAnywhere, Category = "00-Input|Cilick")
 	float   TimeInterval = 0.2f;
+
+	bool bTwoClick = false;
+
 	//自动寻路最终点停止半径
 	UPROPERTY(EditAnywhere,Category = "00-Input|autoPath" )
 	float  StopAutoRido = 1000.f;
@@ -96,7 +103,16 @@ private:
 	
 	//游戏能力抬起输入根据标签激活
 	void AbilityInputTagReleased(FGameplayTag InputTag);
-	
+	//游戏能力按住输入根据标签激活
+	void AbilityInputTagHold(FGameplayTag InputTag);
+
+
 	
 	//end
+
+	void ShiftPressed() { bShiftKeyDown = true; };
+	void ShiftReleased() { bShiftKeyDown = false; };
+	bool bShiftKeyDown = false;
+	UPROPERTY(EditAnywhere, Category = "00-Input")
+	TObjectPtr<UInputAction> ShiftAction;//移动输入操作
 };
