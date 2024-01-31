@@ -5,6 +5,12 @@
 #include <Kismet/GameplayStatics.h>
 #include <UI/HUD/AuraHUD.h>
 #include <Player/AuraPlayerController.h>
+#include <AbilitySystemBlueprintLibrary.h>
+#include"AbilitySystem\DA\OccupationInfoDataAsset.h"
+#include"GameplayAbilities\Public\AbilitySystemComponent.h"
+#include <Game/AureGameModeBase.h>
+#include <AbilitySystem/AuraAbilitySystemComponent.h>
+#include <Iterface/CombatInterface.h>
 
 UWidgetController* UAuraAbillitySystemLibrary::GetHUDWidgetController(const UObject* WorldContextObject)
 {
@@ -54,4 +60,64 @@ FHitResult UAuraAbillitySystemLibrary::GetThisHitPlayController(const UObject* W
 	}
 
 	return FHitResult();
+}
+
+void UAuraAbillitySystemLibrary::InitOccupationAttibuate(AActor* TargetObject, EOccupationType OccupationType, TSubclassOf<UGameplayEffect>& SecondaryEffect, TSubclassOf<UGameplayEffect>& VitalEffect)
+{
+	if (TargetObject == nullptr) return;
+
+	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetObject) )
+	{
+		if (AAureGameModeBase* GM = Cast<AAureGameModeBase>(UGameplayStatics::GetGameMode(TargetObject)) )
+		{
+
+			
+			 TSubclassOf<UGameplayEffect>& Effect = GM->OccupationInfo->GetDefaultOccupationToEffect(OccupationType);
+			 
+
+			ApplyEffectToSelf(TargetObject, ASC,Effect);
+			
+			ApplyEffectToSelf(TargetObject, ASC, SecondaryEffect);
+			
+			ApplyEffectToSelf(TargetObject, ASC, VitalEffect);
+
+			
+		}
+
+	}
+}
+
+void UAuraAbillitySystemLibrary::InitOccupationAttibuate(AActor* TargetObject, EOccupationType OccupationType)
+{
+	if (TargetObject == nullptr) return;
+
+	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetObject))
+	{
+		if (AAureGameModeBase* GM = Cast<AAureGameModeBase>(UGameplayStatics::GetGameMode(TargetObject)))
+		{
+
+
+			TSubclassOf<UGameplayEffect>& Effect = GM->OccupationInfo->GetDefaultOccupationToEffect(OccupationType);
+
+			ApplyEffectToSelf(TargetObject, ASC, Effect);
+
+			ApplyEffectToSelf(TargetObject, ASC, GM->OccupationInfo->SecondaryEffect);
+
+			ApplyEffectToSelf(TargetObject, ASC, GM->OccupationInfo->VitalEffect);
+
+
+		}
+
+	}
+}
+
+void UAuraAbillitySystemLibrary::ApplyEffectToSelf(AActor* Target, UAbilitySystemComponent* ASC, TSubclassOf<UGameplayEffect>& Effect)
+{
+	check(Effect);
+
+	ICombatInterface* CIF = Cast<ICombatInterface>(Target);
+	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+	ContextHandle.AddSourceObject(Target);
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(Effect, CIF ? CIF->GetLevel() : 1.f, ContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }

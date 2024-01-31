@@ -4,6 +4,7 @@
 #include "AbilitySystem/GameAbility/AuraGameAbility_Projectile.h"
 #include <Character/AuraCharacterBase.h>
 #include <AbilitySystem/AuraAbillitySystemLibrary.h>
+#include <AbilitySystemBlueprintLibrary.h>
 
 void UAuraGameAbility_Projectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -13,14 +14,22 @@ void UAuraGameAbility_Projectile::ActivateAbility(const FGameplayAbilitySpecHand
 
 	if (AAuraCharacterBase * OwnerCharacter = Cast<AAuraCharacterBase>(ActorInfo->AvatarActor) )
 	{	
-		SpawnActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnActorClass, SpawnTransform, ActorInfo->AvatarActor.Get(), Cast<APawn>(ActorInfo->AvatarActor.Get()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		SpawnProjectile = GetWorld()->SpawnActorDeferred<AAEffectActo_Projectile>(SpawnProjectileClass, SpawnTransform, ActorInfo->AvatarActor.Get(), Cast<APawn>(ActorInfo->AvatarActor.Get()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
+		{
+			FGameplayEffectSpecHandle EffectSpecHandle =	ASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ASC->MakeEffectContext());
+			SpawnProjectile->EffectSpecHandle = EffectSpecHandle;
+
+
+		}
+
 	}
 
 }
 
 void UAuraGameAbility_Projectile::FinishSpawning(const FVector& TargetLocation)
 {
-	if (SpawnActor)
+	if (SpawnProjectile)
 	{
 		AAuraCharacterBase* OwnerCharacter = Cast<AAuraCharacterBase>(GetCurrentActorInfo()->AvatarActor) ;
 
@@ -40,7 +49,7 @@ void UAuraGameAbility_Projectile::FinishSpawning(const FVector& TargetLocation)
 			)
 		);
 
-		SpawnActor->FinishSpawning(SpawnTransform);
+		SpawnProjectile->FinishSpawning(SpawnTransform);
 	}
 	
 }

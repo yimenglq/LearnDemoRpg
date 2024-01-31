@@ -9,8 +9,8 @@ void UAuraAbilitySystemComponent::AbiltyActorInfoSet()
 {
 	if (bInited) return;
 
-
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::EffectApplied);
+	//注意 OnGameplayEffectAppliedDelegateToSelf 只在服务器上调用
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::ClientEffectApplied);
 
 	bInited = true;
 
@@ -105,7 +105,7 @@ void UAuraAbilitySystemComponent::AddCharacterAbility(TSubclassOf<UGameplayAbili
 
 }
 
-void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComp, const FGameplayEffectSpec& GameplayEffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
+void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComp, const FGameplayEffectSpec& GameplayEffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UAuraAbilitySystemComponent::EffectApplied "));
 	

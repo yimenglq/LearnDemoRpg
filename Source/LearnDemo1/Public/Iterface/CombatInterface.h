@@ -24,10 +24,17 @@ class LEARNDEMO1_API ICombatInterface
 public:
 
 	virtual int32 GetLevel() const { return 0; };
+	
 
+
+
+	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
+	int32 BP_GetLevel();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
 
+	
 
+		
 };

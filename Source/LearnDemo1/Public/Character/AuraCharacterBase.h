@@ -9,7 +9,9 @@
 #include "GameFramework/Character.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include"Components\CapsuleComponent.h"
+#include <AbilitySystem/DA/OccupationInfoDataAsset.h>
 #include "AuraCharacterBase.generated.h"
+
 
 
 
@@ -57,6 +59,10 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+
+	//角色职业
+	UPROPERTY(EditAnywhere,Category = "00-CharacterBase")
+	EOccupationType OccupationType = EOccupationType::Warrior;
 
 
 	//游戏开始时启动的游戏能力

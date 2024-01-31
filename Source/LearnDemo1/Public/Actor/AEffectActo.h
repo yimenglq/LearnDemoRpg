@@ -48,6 +48,8 @@ class LEARNDEMO1_API AAEffectActo : public AActor
 	GENERATED_BODY()
 	
 public:	
+	
+
 
 	AAEffectActo();
 

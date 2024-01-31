@@ -4,9 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include"AbilitySystem\DA\OccupationInfoDataAsset.h"
 #include "AuraAbillitySystemLibrary.generated.h"
 
 class UWidgetController;
+
+class UGameplayEffect;
+
+
 
 /**
  * 
@@ -26,4 +31,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbillitySystemLibrary")
 	static FHitResult GetThisHitPlayController(const UObject* WorldContextObject);
+
+	static void InitOccupationAttibuate(AActor* TargetObject, EOccupationType OccupationType, TSubclassOf<UGameplayEffect>& SecondaryEffect, TSubclassOf<UGameplayEffect>& VitalEffect);
+	UFUNCTION(BlueprintCallable, Category = "AuraAbillitySystemLibrary")
+	static void InitOccupationAttibuate(AActor* TargetObject, EOccupationType OccupationType);
+
+
+private:
+
+	static void ApplyEffectToSelf(AActor* Target, UAbilitySystemComponent* ASC, TSubclassOf<UGameplayEffect>& Effect);
 };

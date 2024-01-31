@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/GameAbility/AuraGameAbility.h"
+#include <Actor/AEffectActo_Projectile.h>
 #include "AuraGameAbility_Projectile.generated.h"
+
 
 /**
  * 
@@ -34,11 +36,13 @@ public:
 	
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "AuraCharacterBase|Attribute")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
 	UPROPERTY(EditAnywhere,Category = "Spawn")
-	TSubclassOf<AActor> SpawnActorClass;
+	TSubclassOf<AAEffectActo_Projectile> SpawnProjectileClass;
 
-	AActor* SpawnActor;
+	AAEffectActo_Projectile* SpawnProjectile;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	FName SocketSpawn;

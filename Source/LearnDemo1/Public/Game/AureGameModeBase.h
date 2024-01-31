@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include"E:\Program Files\Epic Games\UE_5.2\Engine\Source\Runtime\Engine\Classes\Engine\TextureRenderTarget2D.h"
+#include"Engine\Classes\Engine\TextureRenderTarget2D.h"
 #include <ImageUtils.h>
 #include "GameFramework/GameModeBase.h"
 #include "AureGameModeBase.generated.h"
 
+class UOccupationInfoDataAsset;
 
 /**
  * 
@@ -18,7 +19,25 @@ class LEARNDEMO1_API AAureGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 
+public:
+	
+	UPROPERTY(EditAnywhere,Category = "00-OccupationInfo")
+	TObjectPtr<UOccupationInfoDataAsset> OccupationInfo;
+		 
 
+
+
+
+
+
+
+
+
+
+
+
+
+private:
 	//将渲染纹理2d对象存储到文件以二进制的形式
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "SaveRenderTargetToFile", Keywords = "SaveRenderTargetToFile"), Category = "SaveToFile")
 	static bool SaveRenderTargetToFile(UTextureRenderTarget2D* rt, const FString& fileDestination)
