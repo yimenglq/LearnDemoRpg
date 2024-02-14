@@ -29,7 +29,9 @@ public:
 
 	//游戏效果句柄
 	FGameplayEffectSpecHandle EffectSpecHandle;
-
+	
+	UPROPERTY(EditAnywhere,Category = "00-GE")
+	TSubclassOf<UGameplayEffect> GameplayEffectClass;//占位用的
 
 
 protected:

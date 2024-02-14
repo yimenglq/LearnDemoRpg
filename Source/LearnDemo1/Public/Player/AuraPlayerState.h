@@ -31,7 +31,7 @@ public:
 
 
 
-
+	UPROPERTY(EditDefaultsOnly,Category = "Lecel" )
 	int32 Level = 1;
 protected:
 

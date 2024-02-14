@@ -43,6 +43,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> VitalEffect;
 	
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UGameplayAbility>> ComAbility;
+
+
 	UFUNCTION(BlueprintCallable,BlueprintPure)
 	 TSubclassOf<UGameplayEffect>& GetDefaultOccupationToEffect(EOccupationType OccupationType);
 

@@ -104,6 +104,10 @@ void FAuraGamePlayTags::InitalizNativeGameplayTags()
 		
 		//End
 
+
+		AddGameplayTag(Damage, Damage, TEXT("This is Damage"));
+		AddGameplayTag(HitReact, HitReact, L"This is HitReact");
+		AddGameplayTag(Death, Death, L"This is Death");
 }
 
 void FAuraGamePlayTags::SetGameplayTag(FGameplayTag&& SroTag, const FGameplayTag& AddNewTag)

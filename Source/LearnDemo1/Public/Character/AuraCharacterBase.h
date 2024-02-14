@@ -60,8 +60,16 @@ protected:
 
 protected:
 
+	//受击动画蒙太奇
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "HitReact")
+	TObjectPtr<UAnimMontage> HitReactAnimMontage;
+
+	//死亡动画蒙太奇
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitReact")
+	TObjectPtr<UAnimMontage> DeathAnimMontage;
+
 	//角色职业
-	UPROPERTY(EditAnywhere,Category = "00-CharacterBase")
+	UPROPERTY(EditAnywhere,Category = "CharacterBase")
 	EOccupationType OccupationType = EOccupationType::Warrior;
 
 

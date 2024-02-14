@@ -6,6 +6,7 @@
 #include "Character/AuraEnemy.h"
 #include <UI/Widget/AuraWidget.h>
 #include <AbilitySystem/AuraAbillitySystemLibrary.h>
+#include <Game/AureGameModeBase.h>
 
 
 AAuraEnemy::AAuraEnemy()
@@ -26,6 +27,11 @@ void AAuraEnemy::InitAbilityActorInfo()
 	//初始化GAS组件 Owner 是创造者 Avatar 是在世界中具体的化身
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbiltyActorInfoSet();
+	
+	AAureGameModeBase* GM =	Cast< AAureGameModeBase>(GetWorld()->GetAuthGameMode());
+	for(TSubclassOf<UGameplayAbility>& GA : GM->OccupationInfo->ComAbility)
+	AbilitySystemComponent->GiveAbility(GA);
+
 	//初始化属性
 	InitAttributSet();
 

@@ -53,6 +53,12 @@ void AAEffectActo_Projectile::BeginOvelap(AActor* OtherActor)
 	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 	{
 		EffectSpecHandle.Data.Get()->SetLevel(EffectLevel);
+		
+		//添加碰撞的目标到游戏效果范例实例里面
+		FGameplayEffectSpecHandle TagrESH = ASC->MakeOutgoingSpec(GameplayEffectClass, 0.f, ASC->MakeEffectContext());
+		/*UGameplayEffect ge; error
+		FGameplayEffectSpecHandle c(new FGameplayEffectSpec(&ge, ASC->MakeEffectContext(), 1.0f));*/
+		EffectSpecHandle.Data.Get()->TargetEffectSpecs.Add(TagrESH);
 		//给游戏能力组件附加游戏效果
 		ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 

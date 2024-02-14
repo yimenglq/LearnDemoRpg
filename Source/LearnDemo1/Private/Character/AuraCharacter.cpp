@@ -49,6 +49,8 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	if (bInited) return;
+
 	InitAbilityActorInfo();
 	AddCharacterAbilityes();
 }

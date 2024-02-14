@@ -18,9 +18,10 @@ public:
 	static void	InitalizNativeGameplayTags();
 
 	
-
+	//将新注册的标签 添加到集合中 与 指定的标签中 FGameplayTag 变量中
 	void SetGameplayTag(FGameplayTag&& SroTag,const FGameplayTag& AddNewTag);
 
+	//这是该属性中所有标签的集合
 	TArray<const FGameplayTag*> Tages;
 
 	/*
@@ -97,6 +98,12 @@ public:
 	FGameplayTag AbilityInput_3;
 	FGameplayTag AbilityInput_4;
 
+
+	FGameplayTag Damage;
+
+	FGameplayTag HitReact;
+
+	FGameplayTag Death;
 
 protected:
 	

@@ -36,6 +36,9 @@ public:
 	virtual int32 GetLevel() const  override { return Level; };
 
 	virtual int32 BP_GetLevel_Implementation() override { return GetLevel(); };
+
+	virtual	UAnimMontage* GetHitReactMontage_Implementation() override { return HitReactAnimMontage; };
+	virtual	UAnimMontage* GetDeathMontage_Implementation() override { return DeathAnimMontage; };
 	//End
 
 	//Override  AAuraCharacterBase

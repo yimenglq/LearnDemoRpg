@@ -30,6 +30,8 @@ public:
 	
 	//Override ICombatInterface
 	virtual int32	GetLevel()const override {	if (AAuraPlayerState* PS = Cast<AAuraPlayerState>(GetPlayerState()) )  return PS->Level;  else   return 0; };
+	
+	virtual int32 BP_GetLevel_Implementation() override { return GetLevel(); };
 	//End
 
 
@@ -56,6 +58,7 @@ protected:
 
 private:
 
-	
+	//是否已经初始化绑定
+	bool bInited = false;
 
 };

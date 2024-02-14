@@ -58,6 +58,7 @@ public:
 	//GameplayAttributeData修改后
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
+	// GameplayAttributeData Base值修改前
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 
 	//End
@@ -303,13 +304,14 @@ public:
 	 * Meta Attributes
 	 */
 
-	/*UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_IncomingDamage, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_IncomingDamage, Category = "Attributes")
 	FGameplayAttributeData IncomingDamage;
 	UFUNCTION()
 	void OnRep_IncomingDamage(const FGameplayAttributeData& OldIncomingDamage);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
 
 
+	/*
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_IncomingXP, Category = "Attributes")
 	FGameplayAttributeData IncomingXP;
 	UFUNCTION()

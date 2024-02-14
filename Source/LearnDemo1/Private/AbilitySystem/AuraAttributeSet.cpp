@@ -2,7 +2,7 @@
 
 #include <Net/UnrealNetwork.h>
 #include"GameplayAbilities\Public\AbilitySystemComponent.h"
-
+#include"GameplayEffectExtension.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include <FAuraGamePlayTags.h>
 
@@ -165,6 +165,35 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 {
 	//Debug绘制到屏幕上
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString(TEXT("Hello World")));
+
+
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+
+			float Damage = GetIncomingDamage();
+			SetIncomingDamage(0.f);
+			if (Damage > 0.f)
+			{
+				float NewHealth = GetHealth() - Damage;
+				SetHealth( FMath::Clamp(NewHealth, 0, GetMaxHealth()));
+				bool bFalt = NewHealth <= 0.f;
+				if (!bFalt)
+				{
+					FGameplayTagContainer TagC(FAuraGamePlayTags::Get().HitReact);
+					//根据标签激活游戏能力
+					GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagC);
+
+				}
+				else
+				{
+					//血量归零时
+					FGameplayTagContainer TagC(FAuraGamePlayTags::Get().Death);
+					//根据标签激活游戏能力
+					GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagC);
+				}
+			}
+	}
+
 }
 
 
@@ -179,6 +208,8 @@ void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Mana, OldMana);
 }
+
+
 
 void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength)
 {
@@ -270,7 +301,9 @@ void UAuraAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& O
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, PhysicalResistance, OldPhysicalResistance);
 }
 
-
-
+void UAuraAttributeSet::OnRep_IncomingDamage(const FGameplayAttributeData& OldIncomingDamage)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, IncomingDamage, OldIncomingDamage);
+}
 
 

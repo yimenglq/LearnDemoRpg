@@ -48,4 +48,7 @@ protected:
 	FName SocketSpawn;
 
 	FTransform SpawnTransform;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Spawn|Damage")
+	FScalableFloat Damage;
 };
