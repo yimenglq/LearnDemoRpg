@@ -43,6 +43,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> VitalEffect;
 	
+	//需要根据游戏标签启动的游戏能力
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UGameplayAbility>> ComAbility;
 

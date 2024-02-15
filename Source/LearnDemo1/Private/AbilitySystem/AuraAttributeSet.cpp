@@ -5,6 +5,9 @@
 #include"GameplayEffectExtension.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include <FAuraGamePlayTags.h>
+#include <Iterface/CombatInterface.h>
+#include <Kismet/GameplayStatics.h>
+#include <Player/AuraPlayerController.h>
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -177,20 +180,43 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				float NewHealth = GetHealth() - Damage;
 				SetHealth( FMath::Clamp(NewHealth, 0, GetMaxHealth()));
 				bool bFalt = NewHealth <= 0.f;
-				if (!bFalt)
+				if (bFalt)
 				{
-					FGameplayTagContainer TagC(FAuraGamePlayTags::Get().HitReact);
-					//根据标签激活游戏能力
-					GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagC);
+					ICombatInterface* CIF =	Cast<ICombatInterface>(Data.Target.GetAvatarActor());
+					CIF->Die();
+					
+					//FGameplayTagContainer TagC(FAuraGamePlayTags::Get().Death);
+					////根据标签激活游戏能力
+					//Data.Target.TryActivateAbilitiesByTag(TagC);
 
+				
 				}
 				else
 				{
-					//血量归零时
-					FGameplayTagContainer TagC(FAuraGamePlayTags::Get().Death);
+					FGameplayTagContainer TagC(FAuraGamePlayTags::Get().HitReact);
 					//根据标签激活游戏能力
-					GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagC);
+					Data.Target.TryActivateAbilitiesByTag(TagC);
+
 				}
+
+				AAuraPlayerController* APC = Cast<AAuraPlayerController>(Data.EffectSpec.GetEffectContext().Get()->GetEffectCauser()->GetOwner());
+		
+				//查找玩家控制器  如果到顶层都失败了就跳出 
+			while (!APC)
+			{
+				if (auto* outer = APC->GetOwner())
+					APC = Cast<AAuraPlayerController>(outer);
+				else
+					break;
+			}
+
+
+				if (APC)
+				{
+					APawn* Tagr = 	Cast<APawn>(GetOwningAbilitySystemComponent()->GetAvatarActor());
+					APC->ShowDamageWidget(Damage, Tagr);
+				}
+
 			}
 	}
 

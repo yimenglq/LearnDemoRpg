@@ -10,6 +10,7 @@
 #include "GameFramework\CharacterMovementComponent.h"
 #include"Components\CapsuleComponent.h"
 #include <AbilitySystem/DA/OccupationInfoDataAsset.h>
+#include"Iterface\CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
 
@@ -21,7 +22,7 @@
 */
 
 UCLASS()
-class LEARNDEMO1_API AAuraCharacterBase : public ACharacter,public IAbilitySystemInterface
+class LEARNDEMO1_API AAuraCharacterBase : public ACharacter,public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -35,7 +36,18 @@ public:
 	//获得属性集合
 	UAttributeSet* GetAttributeSet() { return AttributeSet; };
 	// End  
-	// 
+	
+	//Override ICombatInterface 
+	
+	//死亡
+	virtual void Die() override;
+
+	UFUNCTION( NetMulticast, Reliable)
+	virtual void SeverDie();
+
+	
+	//End
+	
 	//初始化GAS组件
 	virtual void InitAbilityActorInfo();
 
@@ -53,6 +65,15 @@ public:
 
 	TObjectPtr<USkeletalMeshComponent> GetWeapons()const { return Weapons; }
 
+	void Dissolve();
+
+	//在蓝图使用时间线设置动态实例参数
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetMeshDissolveTimeLine(UMaterialInstanceDynamic* MIDynamic);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetWeaponsDissolveTimeLine(UMaterialInstanceDynamic* MIDynamic);
+
 
 protected:
 	
@@ -60,16 +81,29 @@ protected:
 
 protected:
 
+	//网格体溶解
+	UPROPERTY(EditAnywhere,Category="AuraCharacterBase|MaterialInstance")
+	TObjectPtr<UMaterialInstance> MeshDissolve;
+
+	//武器溶解
+	UPROPERTY(EditAnywhere, Category = "AuraCharacterBase|MaterialInstance")
+	TObjectPtr<UMaterialInstance>  WeaponsDissolve;
+
+
+	//死亡时销毁的时间
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "AuraCharacterBase|LifeSpan(销魂时间)")
+	float LifeSpan = 5.f;
+
 	//受击动画蒙太奇
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "HitReact")
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "AuraCharacterBase|HitReact")
 	TObjectPtr<UAnimMontage> HitReactAnimMontage;
 
 	//死亡动画蒙太奇
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitReact")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AuraCharacterBase|HitReact")
 	TObjectPtr<UAnimMontage> DeathAnimMontage;
 
 	//角色职业
-	UPROPERTY(EditAnywhere,Category = "CharacterBase")
+	UPROPERTY(EditAnywhere,Category = "AuraCharacterBase")
 	EOccupationType OccupationType = EOccupationType::Warrior;
 
 

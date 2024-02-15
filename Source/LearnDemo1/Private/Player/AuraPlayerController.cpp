@@ -16,6 +16,7 @@
 #include <NavigationSystem.h>
 #include"NavigationSystem\Public\NavigationPath.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include"UI\Widget\DamageWidgetComponent.h"
 
 //#include <ApplicationCore/Private/Windows/WindowsApplication.cpp>
 
@@ -79,6 +80,17 @@ void AAuraPlayerController::SetupInputComponent()
 		EInputComp->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
 		EInputComp->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	}
+	
+}
+
+void AAuraPlayerController::ShowDamageWidget_Implementation(float Damage, APawn* Target)
+{
+	UDamageWidgetComponent* DamageWidget =	NewObject<UDamageWidgetComponent>(Target,DamageWidgetClass);
+	DamageWidget->RegisterComponent();
+	DamageWidget->AttachToComponent(Target->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	DamageWidget->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	
+	DamageWidget->SetDamage(Damage);
 	
 }
 

@@ -29,8 +29,9 @@ void AAuraEnemy::InitAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbiltyActorInfoSet();
 	
 	AAureGameModeBase* GM =	Cast< AAureGameModeBase>(GetWorld()->GetAuthGameMode());
-	for(TSubclassOf<UGameplayAbility>& GA : GM->OccupationInfo->ComAbility)
-	AbilitySystemComponent->GiveAbility(GA);
+	if(HasAuthority())
+		for(TSubclassOf<UGameplayAbility>& GA : GM->OccupationInfo->ComAbility)
+			AbilitySystemComponent->GiveAbility(GA);
 
 	//初始化属性
 	InitAttributSet();
@@ -90,6 +91,14 @@ void AAuraEnemy::CloceHighLight()
 	//关闭自定义深度值
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapons->SetRenderCustomDepth(false);
+}
+
+void AAuraEnemy::Die()
+{
+
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+
 }
 
 

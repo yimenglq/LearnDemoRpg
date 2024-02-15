@@ -15,7 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAuraAttributeDelegate, float, NewVa
  * µ–∑ΩNPC»À–Œ
  */
 UCLASS(Blueprintable)
-class LEARNDEMO1_API AAuraEnemy : public AAuraCharacterBase, public IHighLightIterface, public ICombatInterface
+class LEARNDEMO1_API AAuraEnemy : public AAuraCharacterBase, public IHighLightIterface
 {
 	GENERATED_BODY()
 	
@@ -34,6 +34,8 @@ public:
 	//Override ICombatInterface
 	
 	virtual int32 GetLevel() const  override { return Level; };
+
+	virtual void Die() override;
 
 	virtual int32 BP_GetLevel_Implementation() override { return GetLevel(); };
 

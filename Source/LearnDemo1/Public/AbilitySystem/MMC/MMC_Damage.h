@@ -14,7 +14,17 @@ class LEARNDEMO1_API UMMC_Damage : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
 	
+
+
+
+
 public:
+	
+	UMMC_Damage();
+
 
 	float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const;
+
+	FGameplayEffectAttributeCaptureDefinition IntelligenceDef;
+
 };

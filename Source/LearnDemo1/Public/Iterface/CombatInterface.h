@@ -26,6 +26,8 @@ public:
 	virtual int32 GetLevel() const { return 0; };
 	
 
+	virtual void Die() = 0;
+
 
 
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
@@ -39,5 +41,8 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetDeathMontage();
+
+
+
 		
 };

@@ -14,6 +14,7 @@ struct FGameplayTag;
 class UAuraInputConfigDA;
 class USplineComponent;
 class UNavigationPath;
+class UDamageWidgetComponent;
 
 /**
  * 
@@ -36,6 +37,9 @@ public:
 
 	FHitResult GetThisHit()const { return ThisHitResult; }
 
+
+	UFUNCTION(Client,Reliable)
+	void ShowDamageWidget(float Damage,APawn* Target);
 
 protected:
 
@@ -94,7 +98,7 @@ private:
 
 	//AbilityInput
 
-	UPROPERTY(EditAnywhere, Category = "00Input|InputConfig")
+	UPROPERTY(EditAnywhere, Category = "00-Input|InputConfig")
 	TObjectPtr<	UAuraInputConfigDA> AuraInputConfig;
 
 
@@ -115,4 +119,7 @@ private:
 	bool bShiftKeyDown = false;
 	UPROPERTY(EditAnywhere, Category = "00-Input")
 	TObjectPtr<UInputAction> ShiftAction;//ÒÆ¶¯ÊäÈë²Ù×÷
+
+	UPROPERTY(EditAnywhere, Category = "00-Input|Widget")
+	TSubclassOf<UDamageWidgetComponent> DamageWidgetClass;
 };

@@ -15,7 +15,7 @@ class UCameraComponent;
  *  ÕÊº“»À–Œ
  */
 UCLASS()
-class LEARNDEMO1_API AAuraCharacter : public AAuraCharacterBase, public ICombatInterface
+class LEARNDEMO1_API AAuraCharacter : public AAuraCharacterBase
 {
 	GENERATED_BODY()
 
